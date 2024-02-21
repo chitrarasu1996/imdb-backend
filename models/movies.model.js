@@ -17,11 +17,18 @@ const moviesListsSchema = mongoose.Schema({
             required:true
         }
     ],
-    producer: {
+
+    image:{
+        type:String,
+        required:true
+    },
+
+    producer:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'producers',
         required: true,
     },
+
 });
 
 module.exports = mongoose.model("moviesCollection", moviesListsSchema);

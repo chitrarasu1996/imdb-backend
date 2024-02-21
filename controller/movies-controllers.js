@@ -9,10 +9,10 @@ if(!isverified){
    return  res.status(200).send({result:false,message:"token is not valid"})
 }
 
-        const {movieName, yearOfRelease, actors,producer}=req.body
-
+        const {movieName, yearOfRelease, actors,producer,imageBase64}=req.body
         const  releasedYear=parseInt(yearOfRelease, 10)
 
+       
         if (!movieName || !releasedYear|| !actors || !producer) {
             return res.status(200).send({ result: false, message: "Missing required fields" });
         }
@@ -27,6 +27,7 @@ if(!isverified){
             movieName,
             yearOfRelease:releasedYear,
             actors,
+            image:imageBase64,
             producer
         }).save()
       if(!store){
@@ -34,6 +35,7 @@ if(!isverified){
       }
       res.status(201).send({result:true,message:"movie succefully stored"})
 
+    
     } catch (error) {
         console.log(error)
     }
@@ -73,7 +75,6 @@ exports.updateThemoviesDetails=async(req,res)=>{
     try {
         const {token}=req.headers
         const {movieId}=req.params
-
         const validToken=await JWT.verify(token,process.env.SECRET_KEY)
 
 if(!validToken) res.status(200).send({result:false,message:"token not valid please login"})
@@ -81,13 +82,14 @@ const validUser=await userCollection.findOne({email:validToken.email})
    
 if(!validUser) res.status(200).send({result:false,message:"user doent exist kindly register"})
 
-const {movieName,yearOfRelease,actors,producer}=req.body
+const {movieName,yearOfRelease,actors,producer,image}=req.body
 
 const updated=await moviesCollection.findByIdAndUpdate({_id:movieId},{$set:{
     movieName,
     yearOfRelease,
     actors,
-    producer
+    producer,
+    image
 
 }})
 if(!updated) res.status(400).send({result:false,message:"getting error while updating details "})
@@ -99,3 +101,4 @@ res.status(201).send({result:true,message:"movie successfully updated"})
          console.log(error)
     }
 }
+

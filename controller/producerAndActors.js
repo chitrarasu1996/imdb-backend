@@ -16,12 +16,16 @@ exports.createProducerAndActors = async (req, res) => {
     if (oldActor || oldProducer) {
       return res.status(200).send({ result: false, message: "Actor or producer already exists" });
     }
+    let actorStored;
+    let producerStored;
+if(actors){
+   actorStored = await new actorsCollection({ actorsName: actors }).save();
+}else if(producer){
+   producerStored = await new producerCollection({ producerName: producer }).save();
+}
+   
 
-    const actorStored = await new actorsCollection({ actorsName: actors }).save();
-    const producerStored = await new producerCollection({ producerName: producer }).save();
-
-
-if(!actorStored||!producerStored){
+if(!actorStored&&!producerStored){
     return res.status(200).send({message:"error while storing actorName or producers name"})
 }
     res.status(201).send({result:true, message: "User and actor successfully stored" });
